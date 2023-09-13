@@ -144,11 +144,13 @@ jobs:
         run: eksctl create cluster -f ${GITHUB_WORKSPACE}/eksk8s/cluster-config.yaml
 
       - name: Gets down the kub_config file
+        if: false
         run: |
           aws eks --region ${AWS_REGION} update-kubeconfig --name cv-eks-cluster
           cat ${HOME}/.kube/config
 
       - name: Saves the kubeconfig as ssm value
+        if: false
         run: |
           base64 -w 0 ${HOME}/.kube/config > ${GITHUB_WORKSPACE}/kube_encoded
           KUBE_CONFIG=$(cat ${GITHUB_WORKSPACE}/kube_encoded)
@@ -179,4 +181,4 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
       - name: Executes the cloudformation template
-        run: aws cloudformation create-stack --stack-name cv-stack --template-body file://cloudfront-template.yml
+        run: aws cloudformation create-stack --stack-name cv-cloudformation-stack --template-body file://cloudfront-template.yml

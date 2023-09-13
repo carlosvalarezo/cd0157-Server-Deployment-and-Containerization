@@ -8,6 +8,7 @@ Parameters:
     Default: CLUSTER_NAME
     ConstraintDescription: You must enter the EKS cluster name
 
+<<<<<<< HEAD
   EksClusterRoleArn:
     Description: The name of the EKS cluster role already created
     Type: String
@@ -19,20 +20,39 @@ Parameters:
     Type: String
     NoEcho: true
     Default: _AWS_ACCESS_KEY_ID
+=======
+  AwsAccessKeyId:
+    Description: The AwsAccessKeyId value
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: _AWS_ACCESS_KEY_ID
+    NoEcho: true
+>>>>>>> ff8d780 (imports the AWS creds from github and inserts them as ssm value in order to download the kube config file from the cluster in codebuild rather than in the github action workflow. It also skips two steps in the github action workflow in order to keep that code as future reference)
     ConstraintDescription: You must enter the AWS Key ID
 
   AwsSecretAccessKey:
     Description: The AwsSecretAccessKey value
+<<<<<<< HEAD
     Type: String
     NoEcho: true
     Default: _AWS_SECRET_ACCESS_KEY
+=======
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: _AWS_SECRET_ACCESS_KEY
+    NoEcho: true
+>>>>>>> ff8d780 (imports the AWS creds from github and inserts them as ssm value in order to download the kube config file from the cluster in codebuild rather than in the github action workflow. It also skips two steps in the github action workflow in order to keep that code as future reference)
     ConstraintDescription: You must enter the AWS Secret Access Key
 
   AwsRegion:
     Description: The AwsRegion value
+<<<<<<< HEAD
     Type: String
     NoEcho: true
     Default: _AWS_REGION
+=======
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: _AWS_REGION
+    NoEcho: true
+>>>>>>> ff8d780 (imports the AWS creds from github and inserts them as ssm value in order to download the kube config file from the cluster in codebuild rather than in the github action workflow. It also skips two steps in the github action workflow in order to keep that code as future reference)
     ConstraintDescription: You must enter the AWS Region
 
   ClusterRoleName:

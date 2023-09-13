@@ -9,6 +9,27 @@ Parameters:
     NoEcho: true
     ConstraintDescription: You must enter the EKS cluster name
 
+  AwsAccessKeyId:
+    Description: The AwsAccessKeyId value
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: _AWS_ACCESS_KEY_ID
+    NoEcho: true
+    ConstraintDescription: You must enter the AWS Key ID
+
+  AwsSecretAccessKey:
+    Description: The AwsSecretAccessKey value
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: _AWS_SECRET_ACCESS_KEY
+    NoEcho: true
+    ConstraintDescription: You must enter the AWS Secret Access Key
+
+  AwsRegion:
+    Description: The AwsRegion value
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: _AWS_REGION
+    NoEcho: true
+    ConstraintDescription: You must enter the AWS Region
+
   ClusterRoleName:
     Description: The name of role to access to the EKS cluster
     Type: AWS::SSM::Parameter::Value<String>
@@ -141,6 +162,8 @@ Resources:
             Value: !Ref DockerToken
           - Name: KUBE_CONFIG
             Value: !Ref KubeConfig
+          - Name: CLUSTER_NAME
+            Value: !Ref EksClusterName
           - Name: CLUSTER_ROLE_NAME
             Value: !Ref ClusterRoleName
           - Name: ENVIRONMENT
@@ -153,7 +176,12 @@ Resources:
             Value: docker.io
           - Name: JWT_SECRET
             Value: !Ref JWTToken
-
+          - Name: AWS_SECRET_ACCESS_KEY
+            Value: !Ref AwsSecretAccessKey
+          - Name: AWS_ACCESS_KEY_ID
+            Value: !Ref AwsAccessKeyId
+          - Name: AWS_REGION
+            Value: !Ref AwsRegion
       ServiceRole: !Ref CodeBuildRoleName
       Artifacts:
         Type: CODEPIPELINE

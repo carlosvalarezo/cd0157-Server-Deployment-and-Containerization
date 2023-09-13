@@ -106,6 +106,7 @@ jobs:
       GPG_TRUST_OWNERS: ${{ secrets.GPG_TRUST_OWNERS }}
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       RECIPIENT_ID: ${{ secrets.RECIPIENT_ID }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       WORKFLOW_NAME: secrets.yml
     steps:
       - name: Checkout code

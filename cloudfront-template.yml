@@ -8,6 +8,7 @@ Parameters:
     Default: CLUSTER_NAME
     ConstraintDescription: You must enter the EKS cluster name
 
+<<<<<<< HEAD
   EksClusterRoleArn:
     Description: The name of the EKS cluster role already created
     Type: String
@@ -19,20 +20,39 @@ Parameters:
     Type: String
     NoEcho: true
     Default: _AWS_ACCESS_KEY_ID
+=======
+  AwsAccessKeyId:
+    Description: The AwsAccessKeyId value
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: _AWS_ACCESS_KEY_ID
+    NoEcho: true
+>>>>>>> ff8d780 (imports the AWS creds from github and inserts them as ssm value in order to download the kube config file from the cluster in codebuild rather than in the github action workflow. It also skips two steps in the github action workflow in order to keep that code as future reference)
     ConstraintDescription: You must enter the AWS Key ID
 
   AwsSecretAccessKey:
     Description: The AwsSecretAccessKey value
+<<<<<<< HEAD
     Type: String
     NoEcho: true
     Default: _AWS_SECRET_ACCESS_KEY
+=======
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: _AWS_SECRET_ACCESS_KEY
+    NoEcho: true
+>>>>>>> ff8d780 (imports the AWS creds from github and inserts them as ssm value in order to download the kube config file from the cluster in codebuild rather than in the github action workflow. It also skips two steps in the github action workflow in order to keep that code as future reference)
     ConstraintDescription: You must enter the AWS Secret Access Key
 
   AwsRegion:
     Description: The AwsRegion value
+<<<<<<< HEAD
     Type: String
     NoEcho: true
     Default: _AWS_REGION
+=======
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: _AWS_REGION
+    NoEcho: true
+>>>>>>> ff8d780 (imports the AWS creds from github and inserts them as ssm value in order to download the kube config file from the cluster in codebuild rather than in the github action workflow. It also skips two steps in the github action workflow in order to keep that code as future reference)
     ConstraintDescription: You must enter the AWS Region
 
   ClusterRoleName:
@@ -173,6 +193,7 @@ Resources:
                 OAuthToken: !Ref GitHubToken
               OutputArtifacts:
                 - Name: SourceOutput
+<<<<<<< HEAD
         - Name: BuildStage
           Actions:
             - Name: BuildAction
@@ -193,3 +214,49 @@ Resources:
             Type: S3
             Location: cv-codepipeline-artifacts-bucket
       RoleArn: !Ref CodePipelineRoleArn
+=======
+      RoleArn: !Ref CodePipelineRoleName
+
+  CodeBuild:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: cv-codebuild
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec.yml
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/standard:4.0
+        EnvironmentVariables:
+          - Name: DOCKER_USERNAME
+            Value: !Ref DockerUserName
+          - Name: DOCKER_TOKEN
+            Value: !Ref DockerToken
+          - Name: KUBE_CONFIG
+            Value: !Ref KubeConfig
+          - Name: CLUSTER_NAME
+            Value: !Ref EksClusterName
+          - Name: CLUSTER_ROLE_NAME
+            Value: !Ref ClusterRoleName
+          - Name: ENVIRONMENT
+            Value: !Ref Environment
+          - Name: REPOSITORY_NAME
+            Value: !Ref GitSourceRepo
+          - Name: REPOSITORY_BRANCH
+            Value: !Ref GitBranch
+          - Name: REPOSITORY_URI
+            Value: docker.io
+          - Name: JWT_SECRET
+            Value: !Ref JWTToken
+          - Name: AWS_SECRET_ACCESS_KEY
+            Value: !Ref AwsSecretAccessKey
+          - Name: AWS_ACCESS_KEY_ID
+            Value: !Ref AwsAccessKeyId
+          - Name: AWS_REGION
+            Value: !Ref AwsRegion
+      ServiceRole: !Ref CodeBuildRoleName
+      Artifacts:
+        Type: CODEPIPELINE
+        Name: MyBuildOutput
+>>>>>>> ff8d780 (imports the AWS creds from github and inserts them as ssm value in order to download the kube config file from the cluster in codebuild rather than in the github action workflow. It also skips two steps in the github action workflow in order to keep that code as future reference)

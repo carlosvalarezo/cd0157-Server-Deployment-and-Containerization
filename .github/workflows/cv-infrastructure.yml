@@ -134,24 +134,16 @@ jobs:
           mkdir ${GITHUB_WORKSPACE}/artifacts
           RUN_ID=$(gh run list --workflow ${WORKFLOW_NAME} --json databaseId --jq .[0].databaseId)
           gh run download ${RUN_ID} --dir ${GITHUB_WORKSPACE}/artifacts -n arn.gpg
-  
+
       - name: Decrypt artifact
         run: echo ${GPG_PASSPHRASE} | gpg --batch --yes --passphrase-fd 0 --output ${GITHUB_WORKSPACE}/arn --decrypt ${GITHUB_WORKSPACE}/artifacts/arn.gpg
 
-      - name: Creates fake kubeconfig file
-        run: |
-          mkdir ${HOME}/.kube/
-          cat << EOF > ${HOME}/.kube/config
-          Line1
-          EOF
-
       - name: Creates the k8s cluster using eksctl
-        if: false
         run: eksctl create cluster -f ${GITHUB_WORKSPACE}/eksk8s/cluster-config.yaml
 
       - name: Saves the kubeconfig as ssm value
         run: |
-          base64 ${HOME}/.kube/config > ${GITHUB_WORKSPACE}/kube_encoded
+          base64 -w 0 ${HOME}/.kube/config > ${GITHUB_WORKSPACE}/kube_encoded
           KUBE_CONFIG=$(cat ${GITHUB_WORKSPACE}/kube_encoded)
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
           aws ssm put-parameter --region ${AWS_REGION} --name "KUBE_CONIFG" --value ${KUBE_CONFIG} --type "SecureString" --key-id "${KEY_ID}" --overwrite
@@ -164,3 +156,20 @@ jobs:
         with:
           name: kube_config.gpg
           path: ${{ github.workspace }}
+
+  executes_cloudformation:
+    runs-on: ubuntu-latest
+    needs: create_the_cluster
+    environment:
+      name: develop
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3.5.3
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Executes the cloudformation template
+        run: aws cloudformation create-stack --stack-name cv-stack --template-body file://cloudfront-template.yml

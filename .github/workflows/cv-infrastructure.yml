@@ -142,6 +142,11 @@ jobs:
       - name: Creates the k8s cluster using eksctl
         run: eksctl create cluster -f ${GITHUB_WORKSPACE}/eksk8s/cluster-config.yaml
 
+      - name: Gets down the kub_config file
+        run: |
+          aws eks --region ${AWS_REGION} update-kubeconfig --name cv-eks-cluster
+          cat ${HOME}/.kube/config
+
       - name: Saves the kubeconfig as ssm value
         run: |
           base64 -w 0 ${HOME}/.kube/config > ${GITHUB_WORKSPACE}/kube_encoded

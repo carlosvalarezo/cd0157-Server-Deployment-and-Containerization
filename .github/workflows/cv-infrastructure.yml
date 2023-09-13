@@ -85,7 +85,7 @@ jobs:
         run: |
           ROLE_ID=$(aws iam create-role --role-name ${CODEBUILD_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-trust-policy.json --query KeyMetadata.Arn --output text)
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
-          aws ssm put-parameter --region ${AWS_REGION} --name "CODEPIPELINE_ROLE_NAME" --value ${CODEPIPELINE_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
+          aws ssm put-parameter --region ${AWS_REGION} --name "CODEBUILD_ROLE_NAME" --value ${CODEBUILD_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
       - name: Attaches the policy for the codebuild role
         run: aws iam put-role-policy --role-name ${CODEBUILD_ROLE_NAME} --policy-name ${CODEBUILD_ROLE_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-policy.json
@@ -107,6 +107,7 @@ jobs:
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       RECIPIENT_ID: ${{ secrets.RECIPIENT_ID }}
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      CLUSTER_NAME: ${{ vars.CLUSTER_NAME }}
       WORKFLOW_NAME: secrets.yml
     steps:
       - name: Checkout code
@@ -144,9 +145,8 @@ jobs:
         run: eksctl create cluster -f ${GITHUB_WORKSPACE}/eksk8s/cluster-config.yaml
 
       - name: Gets down the kub_config file
-        if: false
         run: |
-          aws eks --region ${AWS_REGION} update-kubeconfig --name cv-eks-cluster
+          aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME}
           cat ${HOME}/.kube/config
 
       - name: Saves the kubeconfig as ssm value

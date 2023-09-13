@@ -167,6 +167,7 @@ jobs:
         run: eksctl create cluster -f ${GITHUB_WORKSPACE}/eksk8s/cluster-config.yaml
 
       - name: Gets down the kub_config file
+        if: false
         run: |
           aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME}
           cat ${HOME}/.kube/config

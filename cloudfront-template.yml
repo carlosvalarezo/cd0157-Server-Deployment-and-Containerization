@@ -95,13 +95,6 @@ Parameters:
     NoEcho: true
     ConstraintDescription: You must enter a token
 
-  KubeConfig:
-    Description: Kube_config file to connect to the k8s cluster
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: KUBE_CONFIG
-    #NoEcho: true
-    ConstraintDescription: You must enter a kube_config file
-
   JWTToken:
     Description: Passphrase used to cypher/decypher the content of the JWT
     Type: AWS::SSM::Parameter::Value<String>
@@ -160,8 +153,6 @@ Resources:
             Value: !Ref DockerUserName
           - Name: DOCKER_TOKEN
             Value: !Ref DockerToken
-          - Name: KUBE_CONFIG
-            Value: !Ref KubeConfig
           - Name: CLUSTER_NAME
             Value: !Ref EksClusterName
           - Name: CLUSTER_ROLE_NAME

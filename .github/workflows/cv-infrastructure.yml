@@ -116,6 +116,7 @@ jobs:
         run: |
           sh ${GITHUB_WORKSPACE}/.github/scripts/eksctl-install.sh
           sh ${GITHUB_WORKSPACE}/.github/scripts/gpg-install.sh
+          sh ${GITHUB_WORKSPACE}/.github/scripts/gpg-agent.sh
 
       - name: Setup the keys to stablish connection between nodes in the k8s cluster
         run: |

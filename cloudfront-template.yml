@@ -4,42 +4,42 @@ Parameters:
 
   EksClusterName:
     Description: The name of the EKS cluster already created
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: CLUSTER_NAME
     NoEcho: true
     ConstraintDescription: You must enter the EKS cluster name
 
   AwsAccessKeyId:
     Description: The AwsAccessKeyId value
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: _AWS_ACCESS_KEY_ID
     NoEcho: true
     ConstraintDescription: You must enter the AWS Key ID
 
   AwsSecretAccessKey:
     Description: The AwsSecretAccessKey value
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: _AWS_SECRET_ACCESS_KEY
     NoEcho: true
     ConstraintDescription: You must enter the AWS Secret Access Key
 
   AwsRegion:
     Description: The AwsRegion value
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: _AWS_REGION
     NoEcho: true
     ConstraintDescription: You must enter the AWS Region
 
   ClusterRoleName:
     Description: The name of role to access to the EKS cluster
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: CLUSTER_ROLE_NAME
     NoEcho: true
     ConstraintDescription: You must enter the EKS cluster role name
 
   GitSourceRepo:
     Description: GitHub source repository - must contain a Dockerfile and buildspec.yml in the base
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: SOURCE_REPOSITORY
     NoEcho: true
     ConstraintDescription: You must enter a GitHub repository name

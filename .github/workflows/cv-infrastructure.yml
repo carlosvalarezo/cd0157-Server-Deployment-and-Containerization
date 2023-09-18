@@ -181,4 +181,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
       - name: Executes the cloudformation template
-        run: aws cloudformation create-stack --stack-name cv-cloudformation-stack --template-body file://cloudfront-template.yml
+        run: |
+          aws cloudformation create-stack \
+          --stack-name cv-cloudformation-stack \
+          --template-body file://cloudfront-template.yml \
+          --parameters \
+          ParameterKey=EksClusterName,ParameterValue=ssm:/CLUSTER_NAME \
+          ParameterKey=AwsAccessKeyId,ParameterValue=ssm:/_AWS_ACCESS_KEY_ID \
+          ParameterKey=AwsSecretAccessKey,ParameterValue=ssm:/_AWS_SECRET_ACCESS_KEY \
+          ParameterKey=AwsRegion,ParameterValue=ssm:/_AWS_REGION \
+          ParameterKey=ClusterRoleName,ParameterValue=ssm:/CLUSTER_ROLE_NAME \
+          ParameterKey=GitSourceRepo,ParameterValue=ssm:/SOURCE_REPOSITORY \
+          ParameterKey=CodeBuildRoleName,ParameterValue=ssm:/CODEBUILD_ROLE_NAME \
+          ParameterKey=DockerUserName,ParameterValue=ssm:/DOCKER_USERNAME \
+          ParameterKey=DockerToken,ParameterValue=ssm:/DOCKER_TOKEN \
+          ParameterKey=GitHubToken,ParameterValue=ssm:/GITHUB_TOKEN \
+          ParameterKey=JWTToken,ParameterValue=ssm:/JWT_TOKEN \
+          ParameterKey=EksClusterName,ParameterValue=ssm:/CLUSTER_NAME

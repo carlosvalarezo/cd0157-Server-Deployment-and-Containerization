@@ -168,7 +168,7 @@ jobs:
 
   executes_cloudformation:
     runs-on: ubuntu-latest
-    needs: create_the_cluster
+    # needs: create_the_cluster
     environment:
       name: develop
     steps:

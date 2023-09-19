@@ -56,8 +56,7 @@ jobs:
 
       - name: Creates the role that will assume the trust policy to deal with the cluster
         run: |
-          ROLE_ID=$(aws iam create-role --role-name ${CLUSTER_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-cluster-trust-policy.json --query Role.Arn --output text)
-          echo ROLE_ID=${ROLE_ID}
+          aws iam create-role --role-name ${CLUSTER_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-cluster-trust-policy.json --query Role.Arn --output text
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
           aws ssm put-parameter --region ${AWS_REGION} --name "CLUSTER_ROLE_NAME" --value ${CLUSTER_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
@@ -66,7 +65,7 @@ jobs:
 
       - name: Creates the role that will assume the trust policy to deal with the node-group
         run: |
-          ROLE_ID=$(aws iam create-role --role-name ${NODEGROUP_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-nodegroup-trust-policy.json --query Role.Arn --output text)
+          aws iam create-role --role-name ${NODEGROUP_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-nodegroup-trust-policy.json --query Role.Arn --output text
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
           aws ssm put-parameter --region ${AWS_REGION} --name "NODEGROUP_ROLE_NAME" --value ${NODEGROUP_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
@@ -75,18 +74,18 @@ jobs:
 
       - name: Create the role that will assume the trust policy to deal with the codepipeline service
         run: |
-          ROLE_ID=$(aws iam create-role --role-name ${CODEPIPELINE_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/codepipeline-trust-policy.json --query Role.Arn --output text)
+          CODEPIPELINE_ROLE_ARN=$(aws iam create-role --role-name ${CODEPIPELINE_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/codepipeline-trust-policy.json --query Role.Arn --output text)
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
-          aws ssm put-parameter --region ${AWS_REGION} --name "CODEPIPELINE_ROLE_NAME" --value ${CODEPIPELINE_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
+          aws ssm put-parameter --region ${AWS_REGION} --name "CODEPIPELINE_ROLE_ARN" --value ${CODEPIPELINE_ROLE_ARN} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
       - name: Attaches the policy for the codepipeline role
         run: aws iam put-role-policy --role-name ${CODEPIPELINE_ROLE_NAME} --policy-name ${CODEPIPELINE_POLICY_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/codepipeline-policy.json
 
       - name: Create the role that will assume the trust policy to deal with the codebuild service
         run: |
-          ROLE_ID=$(aws iam create-role --role-name ${CODEBUILD_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-trust-policy.json --query Role.Arn --output text)
+          CODEBUILD_ROLE_ARN=$(aws iam create-role --role-name ${CODEBUILD_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-trust-policy.json --query Role.Arn --output text)
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
-          aws ssm put-parameter --region ${AWS_REGION} --name "CODEBUILD_ROLE_NAME" --value ${CODEBUILD_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
+          aws ssm put-parameter --region ${AWS_REGION} --name "CODEBUILD_ROLE_ARN" --value ${CODEBUILD_ROLE_ARN} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
       - name: Attaches the policy for the codebuild role
         run: aws iam put-role-policy --role-name ${CODEBUILD_ROLE_NAME} --policy-name ${CODEBUILD_ROLE_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-policy.json

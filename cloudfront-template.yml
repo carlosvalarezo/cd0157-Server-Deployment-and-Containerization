@@ -102,10 +102,10 @@ Parameters:
   Environment:
     Description: Environments to deploy the app
     Type: String
-    Default: 'develop'
+    Default: develop
     AllowedValues:
-      - 'develop'
-      #- 'production'
+      - develop
+      #- production
 
 Resources:
   EksCluster:

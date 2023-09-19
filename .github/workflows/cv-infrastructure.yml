@@ -189,6 +189,7 @@ jobs:
           --template-body file://cloudfront-template.yml \
           --parameters \
           ParameterKey=EksClusterName,ParameterValue=CLUSTER_NAME \
+          ParameterKey=EksClusterRoleArn,ParameterValue=CLUSTER_ROLE_ARN \
           ParameterKey=AwsAccessKeyId,ParameterValue=_AWS_ACCESS_KEY_ID \
           ParameterKey=AwsSecretAccessKey,ParameterValue=_AWS_SECRET_ACCESS_KEY \
           ParameterKey=AwsRegion,ParameterValue=_AWS_REGION \

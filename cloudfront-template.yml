@@ -54,50 +54,50 @@ Parameters:
     ConstraintDescription: You must enter a GitHub repository branch name
 
   GitHubToken:
-    Type: AWS::SSM::Parameter::Value<String>
+    Description: GitHub API token - see https://github.com/blog/1509-personal-api-tokens
+    Type: String
     Default: GITHUB_TOKEN
     NoEcho: true
-    Description: GitHub API token - see https://github.com/blog/1509-personal-api-tokens
     ConstraintDescription: You must enter a GitHub personal access token
 
   GitHubUser:
     Description: GitHub username or organization
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: GITHUB_USER
     NoEcho: true
     ConstraintDescription: You must enter a GitHub username or organization
 
   CodePipelineRoleName:
     Description: Role to be used by codepipeline
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: CODEPIPELINE_ROLE_NAME
     NoEcho: true
     ConstraintDescription: You must enter a role name
 
   CodeBuildRoleName:
     Description: Role to be used by codebuild
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: CODEBUILD_ROLE_NAME
     NoEcho: true
     ConstraintDescription: You must enter a role name
 
   DockerUserName:
     Description: Username to access docker.io
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: DOCKER_USERNAME
     NoEcho: true
     ConstraintDescription: You must enter a username
 
   DockerToken:
     Description: Token to access docker.io
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: DOCKER_TOKEN
     NoEcho: true
     ConstraintDescription: You must enter a token
 
   JWTToken:
     Description: Passphrase used to cypher/decypher the content of the JWT
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: JWT_TOKEN
     NoEcho: true
     ConstraintDescription: You must enter a JWT token value

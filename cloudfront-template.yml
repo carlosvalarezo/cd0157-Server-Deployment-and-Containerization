@@ -5,46 +5,39 @@ Parameters:
   EksClusterName:
     Description: The name of the EKS cluster already created
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: CLUSTER_NAME
     ConstraintDescription: You must enter the EKS cluster name
 
   EksClusterRoleArn:
     Description: The name of the EKS cluster role already created
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: CLUSTER_ROLE_ARN
     ConstraintDescription: You must enter the EKS cluster role arn
 
   AwsAccessKeyId:
     Description: The AwsAccessKeyId value
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: _AWS_ACCESS_KEY_ID
     NoEcho: true
     ConstraintDescription: You must enter the AWS Key ID
 
   AwsSecretAccessKey:
     Description: The AwsSecretAccessKey value
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: _AWS_SECRET_ACCESS_KEY
     NoEcho: true
     ConstraintDescription: You must enter the AWS Secret Access Key
 
   AwsRegion:
     Description: The AwsRegion value
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: _AWS_REGION
     NoEcho: true
     ConstraintDescription: You must enter the AWS Region
 
   ClusterRoleName:
     Description: The name of role to access to the EKS cluster
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: CLUSTER_ROLE_NAME
     ConstraintDescription: You must enter the EKS cluster role name
 
   GitSourceRepo:
     Description: GitHub source repository - must contain a Dockerfile and buildspec.yml in the base
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: SOURCE_REPOSITORY
     NoEcho: true
     ConstraintDescription: You must enter a GitHub repository name
 
@@ -54,49 +47,42 @@ Parameters:
     NoEcho: true
     MinLength: 1
     MaxLength: 20
-    Default: develop  
+    Default: develop
     ConstraintDescription: You must enter a GitHub repository branch name
 
   GitHubToken:
     Description: GitHub API token - see https://github.com/blog/1509-personal-api-tokens
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: GITHUB_TOKEN
     ConstraintDescription: You must enter a GitHub personal access token
 
   GitHubUser:
     Description: GitHub username or organization
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: GITHUB_USER
     ConstraintDescription: You must enter a GitHub username or organization
 
   CodePipelineRoleArn:
     Description: Role to be used by codepipeline
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: CODEPIPELINE_ROLE_ARN
     ConstraintDescription: You must enter a role name
 
   CodeBuildRoleArn:
     Description: Role to be used by codebuild
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: CODEBUILD_ROLE_ARN
     ConstraintDescription: You must enter a role name
 
   DockerUserName:
     Description: Username to access docker.io
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: DOCKER_USERNAME
     ConstraintDescription: You must enter a username
 
   DockerToken:
     Description: Token to access docker.io
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: DOCKER_TOKEN
     ConstraintDescription: You must enter a token
 
   JWTToken:
     Description: Passphrase used to cypher/decypher the content of the JWT
     Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: JWT_TOKEN
     ConstraintDescription: You must enter a JWT token value
 
   Environment:

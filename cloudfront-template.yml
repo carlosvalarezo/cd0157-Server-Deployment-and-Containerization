@@ -50,7 +50,7 @@ Parameters:
 
   GitBranch:
     Description: GitHub git repository branch - change triggers a new build
-    Type: 'AWS::SSM::Parameter::Value<String>'
+    Type: String
     NoEcho: true
     MinLength: 1
     MaxLength: 20

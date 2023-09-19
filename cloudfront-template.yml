@@ -67,17 +67,17 @@ Parameters:
     NoEcho: true
     ConstraintDescription: You must enter a GitHub username or organization
 
-  CodePipelineRoleName:
+  CodePipelineRoleArn:
     Description: Role to be used by codepipeline
     Type: String
-    Default: CODEPIPELINE_ROLE_NAME
+    Default: CODEPIPELINE_ROLE_ARN
     NoEcho: true
     ConstraintDescription: You must enter a role name
 
-  CodeBuildRoleName:
+  CodeBuildRoleArn:
     Description: Role to be used by codebuild
     Type: String
-    Default: CODEBUILD_ROLE_NAME
+    Default: CODEBUILD_ROLE_ARN
     NoEcho: true
     ConstraintDescription: You must enter a role name
 
@@ -135,7 +135,7 @@ Resources:
                 OAuthToken: !Ref GitHubToken
               OutputArtifacts:
                 - Name: SourceOutput
-      RoleArn: !Ref CodePipelineRoleName
+      RoleArn: !Ref CodePipelineRoleArn
 
   CodeBuild:
     Type: 'AWS::CodeBuild::Project'
@@ -173,7 +173,7 @@ Resources:
             Value: !Ref AwsAccessKeyId
           - Name: AWS_REGION
             Value: !Ref AwsRegion
-      ServiceRole: !Ref CodeBuildRoleName
+      ServiceRole: !Ref CodeBuildRoleArn
       Artifacts:
         Type: CODEPIPELINE
         Name: MyBuildOutput

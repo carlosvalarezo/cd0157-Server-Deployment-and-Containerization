@@ -195,7 +195,7 @@ jobs:
           ParameterKey=ClusterRoleName,ParameterValue=ssm:/CLUSTER_ROLE_NAME \
           ParameterKey=GitSourceRepo,ParameterValue=ssm:/SOURCE_REPOSITORY \
           ParameterKey=CodeBuildRoleArn,ParameterValue=ssm:/CODEBUILD_ROLE_ARN \
-          ParameterKey=CodePeipelineRoleArn,ParameterValue=ssm:/CODEPIPELINE_ROLE_ARN \
+          ParameterKey=CodePipelineRoleArn,ParameterValue=ssm:/CODEPIPELINE_ROLE_ARN \
           ParameterKey=DockerUserName,ParameterValue=ssm:/DOCKER_USERNAME \
           ParameterKey=DockerToken,ParameterValue=ssm:/DOCKER_TOKEN \
           ParameterKey=GitHubToken,ParameterValue=ssm:/GITHUB_TOKEN \

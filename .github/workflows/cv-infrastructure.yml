@@ -188,16 +188,16 @@ jobs:
           --stack-name cv-cloudformation-stack \
           --template-body file://cloudfront-template.yml \
           --parameters \
-          ParameterKey=EksClusterName,ParameterValue=ssm:/CLUSTER_NAME \
-          ParameterKey=AwsAccessKeyId,ParameterValue=ssm:/_AWS_ACCESS_KEY_ID \
-          ParameterKey=AwsSecretAccessKey,ParameterValue=ssm:/_AWS_SECRET_ACCESS_KEY \
-          ParameterKey=AwsRegion,ParameterValue=ssm:/_AWS_REGION \
-          ParameterKey=ClusterRoleName,ParameterValue=ssm:/CLUSTER_ROLE_NAME \
-          ParameterKey=GitSourceRepo,ParameterValue=ssm:/SOURCE_REPOSITORY \
-          ParameterKey=CodeBuildRoleArn,ParameterValue=ssm:/CODEBUILD_ROLE_ARN \
-          ParameterKey=CodePipelineRoleArn,ParameterValue=ssm:/CODEPIPELINE_ROLE_ARN \
-          ParameterKey=DockerUserName,ParameterValue=ssm:/DOCKER_USERNAME \
-          ParameterKey=DockerToken,ParameterValue=ssm:/DOCKER_TOKEN \
-          ParameterKey=GitHubToken,ParameterValue=ssm:/GITHUB_TOKEN \
-          ParameterKey=GitHubUser,ParameterValue=ssm:/GITHUB_USER \
-          ParameterKey=JWTToken,ParameterValue=ssm:/JWT_TOKEN
+          ParameterKey=EksClusterName,ParameterValue=CLUSTER_NAME \
+          ParameterKey=AwsAccessKeyId,ParameterValue=_AWS_ACCESS_KEY_ID \
+          ParameterKey=AwsSecretAccessKey,ParameterValue=_AWS_SECRET_ACCESS_KEY \
+          ParameterKey=AwsRegion,ParameterValue=_AWS_REGION \
+          ParameterKey=ClusterRoleName,ParameterValue=CLUSTER_ROLE_NAME \
+          ParameterKey=GitSourceRepo,ParameterValue=SOURCE_REPOSITORY \
+          ParameterKey=CodeBuildRoleArn,ParameterValue=CODEBUILD_ROLE_ARN \
+          ParameterKey=CodePipelineRoleArn,ParameterValue=CODEPIPELINE_ROLE_ARN \
+          ParameterKey=DockerUserName,ParameterValue=DOCKER_USERNAME \
+          ParameterKey=DockerToken,ParameterValue=DOCKER_TOKEN \
+          ParameterKey=GitHubToken,ParameterValue=GITHUB_TOKEN \
+          ParameterKey=GitHubUser,ParameterValue=GITHUB_USER \
+          ParameterKey=JWTToken,ParameterValue=JWT_TOKEN

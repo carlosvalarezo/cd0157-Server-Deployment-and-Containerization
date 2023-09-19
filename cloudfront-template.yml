@@ -101,7 +101,7 @@ Parameters:
 
   Environment:
     Description: Environments to deploy the app
-    Type: 'AWS::SSM::Parameter::Value<String>'
+    Type: String
     Default: 'develop'
     AllowedValues:
       - 'develop'

@@ -9,6 +9,13 @@ Parameters:
     NoEcho: true
     ConstraintDescription: You must enter the EKS cluster name
 
+  EksClusterRoleArn:
+    Description: The name of the EKS cluster role already created
+    Type: String
+    Default: CLUSTER_ROLE_ARN
+    NoEcho: true
+    ConstraintDescription: You must enter the EKS cluster role arn
+
   AwsAccessKeyId:
     Description: The AwsAccessKeyId value
     Type: String
@@ -115,6 +122,13 @@ Resources:
     Type: AWS::EKS::Cluster
     Properties:
       Name: !Ref EksClusterName
+      RoleArn: !Ref EksClusterRoleArn
+      ResourcesVpcConfig:
+        SubnetIds:
+           - subnet-08375f54b10ac81a2
+           - subnet-0a8eea0bb2b8bd056
+        SecurityGroupIds:
+          - sg-074fc7db95c8a8141
 
   CodePipeline:
     Type: 'AWS::CodePipeline::Pipeline'

@@ -118,18 +118,6 @@ Parameters:
       #- production
 
 Resources:
-  EksCluster:
-    Type: 'AWS::EKS::Cluster'
-    Properties:
-      Name: !Ref EksClusterName
-      RoleArn: !Ref EksClusterRoleArn
-      ResourcesVpcConfig:
-        SubnetIds:
-           - subnet-08375f54b10ac81a2
-           - subnet-0a8eea0bb2b8bd056
-        SecurityGroupIds:
-          - sg-074fc7db95c8a8141
-
   CodePipeline:
     Type: 'AWS::CodePipeline::Pipeline'
     Properties:

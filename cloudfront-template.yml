@@ -98,6 +98,11 @@ Parameters:
     Default: JWT_TOKEN
     ConstraintDescription: You must enter a JWT token value
 
+  ArtifactBucketName:
+    Description: Name for the artifact S3 bucket
+    Type: String
+    Default: cv-codepipeline-artifacts-bucket
+
   Environment:
     Description: Environments to deploy the app
     Type: String
@@ -110,7 +115,7 @@ Resources:
   ArtifactBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: cv-codepipeline-artifacts-bucket
+      BucketName: !Ref ArtifactBucketName
   CodePipeline:
     Type: 'AWS::CodePipeline::Pipeline'
     Properties:

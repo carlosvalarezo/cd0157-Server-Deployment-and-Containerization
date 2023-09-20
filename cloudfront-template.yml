@@ -41,13 +41,11 @@ Parameters:
     Description: The name of role to access to the EKS cluster
     Type: String
     Default: CLUSTER_ROLE_NAME
-    NoEcho: true
     ConstraintDescription: You must enter the EKS cluster role name
 
   GitSourceRepo:
     Description: GitHub source repository - must contain a Dockerfile and buildspec.yml in the base
     Type: String
-    NoEcho: true
     Default: SOURCE_REPOSITORY
     ConstraintDescription: You must enter a GitHub repository name
 
@@ -64,28 +62,24 @@ Parameters:
     Description: GitHub API token - see https://github.com/blog/1509-personal-api-tokens
     Type: String
     Default: GITHUB_TOKEN
-    NoEcho: true
     ConstraintDescription: You must enter a GitHub personal access token
 
   GitHubUser:
     Description: GitHub username or organization
     Type: String
     Default: GITHUB_USER
-    NoEcho: true
     ConstraintDescription: You must enter a GitHub username or organization
 
   CodePipelineRoleArn:
     Description: Role to be used by codepipeline
     Type: String
     Default: CODEPIPELINE_ROLE_ARN
-    NoEcho: true
     ConstraintDescription: You must enter a role name
 
   CodeBuildRoleArn:
     Description: Role to be used by codebuild
     Type: String
     Default: CODEBUILD_ROLE_ARN
-    NoEcho: true
     ConstraintDescription: You must enter a role name
 
   DockerUserName:

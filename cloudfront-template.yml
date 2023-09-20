@@ -107,6 +107,10 @@ Parameters:
       #- production
 
 Resources:
+  ArtifactBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: cv-codepipeline-artifacts-bucket
   CodePipeline:
     Type: 'AWS::CodePipeline::Pipeline'
     Properties:
@@ -126,6 +130,11 @@ Resources:
                 OAuthToken: !Ref GitHubToken
               OutputArtifacts:
                 - Name: SourceOutput
+      ArtifactStores:
+        - Region: !Ref AwsRegion
+          ArtifactStore:
+            Type: S3
+            Location: !Sub "${ArtifactBucket}-${AWS::Region}"
       RoleArn: !Ref CodePipelineRoleArn
 
   CodeBuild:

@@ -7,7 +7,9 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
+      - echo 'starting docker'
       - service docker start
+      - echo 'docker started'
       - docker --version
       - docker run helloworld
       - echo 'about to call dockerd'

@@ -26,6 +26,7 @@ Parameters:
     Type: String
     NoEcho: true
     Default: _AWS_SECRET_ACCESS_KEY
+    ConstraintDescription: You must enter the AWS Secret Access Key
 
   AwsRegion:
     Description: The AwsRegion value

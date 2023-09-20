@@ -173,14 +173,21 @@ jobs:
     #needs: create_the_cluster
     environment:
       name: develop
+    env:
+      GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      GPG_TRUST_OWNERS: ${{ secrets.GPG_TRUST_OWNERS }}
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3.5.3
+
       - name: Setup AWS CLI
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
+
       - name: Executes the cloudformation template
         run: sh ${GITHUB_WORKSPACE}/.github/scripts/ssm.sh

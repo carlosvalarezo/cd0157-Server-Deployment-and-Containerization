@@ -4,7 +4,7 @@ Parameters:
 
   EksClusterName:
     Description: The name of the EKS cluster already created
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: 'AWS::SSM::Parameter::Value<String>'
     Default: {{resolve:ssm:CLUSTER_NAME:3}}
     ConstraintDescription: You must enter the EKS cluster name
 

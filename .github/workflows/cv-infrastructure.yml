@@ -183,7 +183,4 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
       - name: Executes the cloudformation template
-        run: |
-          aws cloudformation create-stack \
-          --stack-name cv-cloudformation-stack \
-          --template-body file://cloudfront-template.yml
+        run: sh ${GITHUB_WORKSPACE}/.github/scripts/ssm.sh

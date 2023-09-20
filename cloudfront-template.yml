@@ -6,12 +6,14 @@ Parameters:
     Description: The name of the EKS cluster already created
     Type: String
     Default: CLUSTER_NAME
+    NoEcho: true
     ConstraintDescription: You must enter the EKS cluster name
 
   EksClusterRoleArn:
     Description: The name of the EKS cluster role already created
     Type: String
     Default: CLUSTER_ROLE_ARN
+    NoEcho: true
     ConstraintDescription: You must enter the EKS cluster role arn
 
   AwsAccessKeyId:
@@ -39,6 +41,7 @@ Parameters:
     Description: The name of role to access to the EKS cluster
     Type: String
     Default: CLUSTER_ROLE_NAME
+    NoEcho: true
     ConstraintDescription: You must enter the EKS cluster role name
 
   GitSourceRepo:
@@ -61,42 +64,49 @@ Parameters:
     Description: GitHub API token - see https://github.com/blog/1509-personal-api-tokens
     Type: String
     Default: GITHUB_TOKEN
+    NoEcho: true
     ConstraintDescription: You must enter a GitHub personal access token
 
   GitHubUser:
     Description: GitHub username or organization
     Type: String
     Default: GITHUB_USER
+    NoEcho: true
     ConstraintDescription: You must enter a GitHub username or organization
 
   CodePipelineRoleArn:
     Description: Role to be used by codepipeline
     Type: String
     Default: CODEPIPELINE_ROLE_ARN
+    NoEcho: true
     ConstraintDescription: You must enter a role name
 
   CodeBuildRoleArn:
     Description: Role to be used by codebuild
     Type: String
     Default: CODEBUILD_ROLE_ARN
+    NoEcho: true
     ConstraintDescription: You must enter a role name
 
   DockerUserName:
     Description: Username to access docker.io
     Type: String
     Default: DOCKER_USERNAME
+    NoEcho: true
     ConstraintDescription: You must enter a username
 
   DockerToken:
     Description: Token to access docker.io
     Type: String
     Default: DOCKER_TOKEN
+    NoEcho: true
     ConstraintDescription: You must enter a token
 
   JWTToken:
     Description: Passphrase used to cypher/decypher the content of the JWT
     Type: String
     Default: JWT_TOKEN
+    NoEcho: true
     ConstraintDescription: You must enter a JWT token value
 
   Environment:

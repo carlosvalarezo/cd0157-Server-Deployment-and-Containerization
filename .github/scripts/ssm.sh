@@ -12,6 +12,7 @@ CODEPIPELINE_ROLE_ARN=$(aws ssm get-parameter --with-decryption --name "CODEPIPE
 DOCKER_USERNAME=$(aws ssm get-parameter --with-decryption --name "DOCKER_USERNAME" --query "Parameter.Value" --output text)
 DOCKER_TOKEN=$(aws ssm get-parameter --with-decryption --name "DOCKER_TOKEN" --query "Parameter.Value" --output text)
 GITHUB_TOKEN=$(aws ssm get-parameter --with-decryption --name "GITHUB_TOKEN" --query "Parameter.Value" --output text)
+GITHUB_USER=$(aws ssm get-parameter --with-decryption --name "GITHUB_USER" --query "Parameter.Value" --output text)
 JWT_TOKEN=$(aws ssm get-parameter --with-decryption --name "JWT_TOKEN" --query "Parameter.Value" --output text)
 
 aws cloudformation create-stack \

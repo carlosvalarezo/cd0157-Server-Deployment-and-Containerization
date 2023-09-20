@@ -1,6 +1,7 @@
 #!/bin/bash
 
-CLUSTER_NAME=$(aws ssm get-parameter --name "CLUSTER_NAME" --query "Parameter.Value" --output text)
+CLUSTER_NAME=$(aws ssm get-parameter --with-decryption --name "CLUSTER_NAME" --query "Parameter.Value" --output text)
+echo "CLUSTER_NAME" = ${CLUSTER_NAME}
 CLUSTER_NAME=$(aws kms decrypt --ciphertext-blob fileb://<$(echo "$CLUSTER_NAME" | base64 -d) --output text --query Plaintext | base64 -d)
 
 CLUSTER_ROLE_ARN=$(aws ssm get-parameter --name "CLUSTER_ROLE_ARN" --query "Parameter.Value" --output text)

@@ -90,7 +90,11 @@ jobs:
 
       - name: Attaches the policy for the codebuild role
         run: aws iam put-role-policy --role-name ${CODEBUILD_ROLE_NAME} --policy-name ${CODEBUILD_POLICY_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-policy.json
-  
+
+      - name: Inserts env vars
+        run: |
+          aws ssm put-parameter --region ${AWS_REGION} --name "LOG_LEVEL" --value ${CODEBUILD_ROLE_ARN} --type "SecureString" --key-id "${KEY_ID}" --overwrite
+
   creates_cloudpipeline_bucket:
     runs-on: ubuntu-latest
     needs: setup_roles_and_policies
@@ -177,7 +181,7 @@ jobs:
           base64 -w 0 ${HOME}/.kube/config > ${GITHUB_WORKSPACE}/kube_encoded
           KUBE_CONFIG=$(cat ${GITHUB_WORKSPACE}/kube_encoded)
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
-          aws ssm put-parameter --region ${AWS_REGION} --name "KUBE_CONIFG" --value ${KUBE_CONFIG} --type "SecureString" --key-id "${KEY_ID}" --overwrite
+          aws ssm put-parameter --region ${AWS_REGION} --name "KUBE_CONIFG" --value ${KUBE_CONFIG} --type "String" --key-id "${KEY_ID}" --overwrite
 
       - name: Encrypts the kubeconfig file
         run: gpg --encrypt -r ${RECIPIENT_ID} --output kube_config.gpg ${HOME}/.kube/config

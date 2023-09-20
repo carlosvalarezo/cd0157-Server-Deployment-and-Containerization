@@ -5,7 +5,6 @@ on:
       - infrastructure
 jobs:
   setup_roles_and_policies:
-    if: false
     runs-on: ubuntu-latest
     environment:
       name: develop
@@ -57,43 +56,65 @@ jobs:
 
       - name: Creates the role that will assume the trust policy to deal with the cluster
         run: |
-          ROLE_ID=$(aws iam create-role --role-name ${CLUSTER_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-cluster-trust-policy.json --query KeyMetadata.Arn --output text)
+          CLUSTER_ROLE_ARN=$(aws iam create-role --role-name ${CLUSTER_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-cluster-trust-policy.json --query Role.Arn --output text)
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
+          aws ssm put-parameter --region ${AWS_REGION} --name "CLUSTER_ROLE_ARN" --value ${CLUSTER_ROLE_ARN} --type "SecureString" --key-id "${KEY_ID}" --overwrite
           aws ssm put-parameter --region ${AWS_REGION} --name "CLUSTER_ROLE_NAME" --value ${CLUSTER_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
       - name: Attaches the policy to the cluster role
-        run: aws iam put-role-policy --role-name ${CLUSTER_ROLE_NAME} --policy-name ${CLUSTER_POLICY_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-cluster-policy.json --query KeyMetadata.Arn --output text
+        run: aws iam put-role-policy --role-name ${CLUSTER_ROLE_NAME} --policy-name ${CLUSTER_POLICY_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-cluster-policy.json --query Role.Arn --output text
 
       - name: Creates the role that will assume the trust policy to deal with the node-group
         run: |
-          ROLE_ID=$(aws iam create-role --role-name ${NODEGROUP_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-nodegroup-trust-policy.json --query KeyMetadata.Arn --output text)
+          aws iam create-role --role-name ${NODEGROUP_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-nodegroup-trust-policy.json --query Role.Arn --output text
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
           aws ssm put-parameter --region ${AWS_REGION} --name "NODEGROUP_ROLE_NAME" --value ${NODEGROUP_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
       - name: Attaches the policy for the node-group role
-        run: aws iam put-role-policy --role-name ${NODEGROUP_ROLE_NAME} --policy-name ${NODEGROUP_POLICY_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-nodegroup-policy.json --query KeyMetadata.Arn --output text
+        run: aws iam put-role-policy --role-name ${NODEGROUP_ROLE_NAME} --policy-name ${NODEGROUP_POLICY_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/eks-nodegroup-policy.json --query Role.Arn --output text
 
       - name: Create the role that will assume the trust policy to deal with the codepipeline service
         run: |
-          ROLE_ID=$(aws iam create-role --role-name ${CODEPIPELINE_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/codepipeline-trust-policy.json --query KeyMetadata.Arn --output text)
+          CODEPIPELINE_ROLE_ARN=$(aws iam create-role --role-name ${CODEPIPELINE_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/codepipeline-trust-policy.json --query Role.Arn --output text)
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
-          aws ssm put-parameter --region ${AWS_REGION} --name "CODEPIPELINE_ROLE_NAME" --value ${CODEPIPELINE_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
+          aws ssm put-parameter --region ${AWS_REGION} --name "CODEPIPELINE_ROLE_ARN" --value ${CODEPIPELINE_ROLE_ARN} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
       - name: Attaches the policy for the codepipeline role
         run: aws iam put-role-policy --role-name ${CODEPIPELINE_ROLE_NAME} --policy-name ${CODEPIPELINE_POLICY_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/codepipeline-policy.json
 
       - name: Create the role that will assume the trust policy to deal with the codebuild service
         run: |
-          ROLE_ID=$(aws iam create-role --role-name ${CODEBUILD_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-trust-policy.json --query KeyMetadata.Arn --output text)
+          CODEBUILD_ROLE_ARN=$(aws iam create-role --role-name ${CODEBUILD_ROLE_NAME} --assume-role-policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-trust-policy.json --query Role.Arn --output text)
           export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
-          aws ssm put-parameter --region ${AWS_REGION} --name "CODEPIPELINE_ROLE_NAME" --value ${CODEPIPELINE_ROLE_NAME} --type "SecureString" --key-id "${KEY_ID}" --overwrite
+          aws ssm put-parameter --region ${AWS_REGION} --name "CODEBUILD_ROLE_ARN" --value ${CODEBUILD_ROLE_ARN} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
       - name: Attaches the policy for the codebuild role
-        run: aws iam put-role-policy --role-name ${CODEBUILD_ROLE_NAME} --policy-name ${CODEBUILD_ROLE_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-policy.json
+        run: aws iam put-role-policy --role-name ${CODEBUILD_ROLE_NAME} --policy-name ${CODEBUILD_POLICY_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-policy.json
+  
+  creates_cloudpipeline_bucket:
+    runs-on: ubuntu-latest
+    needs: setup_roles_and_policies
+    environment:
+      name: develop
+    env:
+      BUCKET_NAME: ${{ vars.BUCKET_NAME }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3.5.3
+
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Creates the s3 bucket
+        run: aws s3api create-bucket --bucket ${BUCKET_NAME} --create-bucket-configuration LocationConstraint=${AWS_REGION}
 
   create_the_cluster:
     runs-on: ubuntu-latest
-    needs: setup_roles_and_policies
+    needs: [setup_roles_and_policies, creates_cloudpipeline_bucket]
     environment:
       name: develop
     env:
@@ -107,6 +128,9 @@ jobs:
       GPG_TRUST_OWNERS: ${{ secrets.GPG_TRUST_OWNERS }}
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       RECIPIENT_ID: ${{ secrets.RECIPIENT_ID }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      CLUSTER_NAME: ${{ vars.CLUSTER_NAME }}
+      WORKFLOW_NAME: secrets.yml
     steps:
       - name: Checkout code
         uses: actions/checkout@v3.5.3
@@ -115,6 +139,7 @@ jobs:
         run: |
           sh ${GITHUB_WORKSPACE}/.github/scripts/eksctl-install.sh
           sh ${GITHUB_WORKSPACE}/.github/scripts/gpg-install.sh
+          sh ${GITHUB_WORKSPACE}/.github/scripts/gpg-agent.sh
 
       - name: Setup the keys to stablish connection between nodes in the k8s cluster
         run: |
@@ -141,7 +166,13 @@ jobs:
       - name: Creates the k8s cluster using eksctl
         run: eksctl create cluster -f ${GITHUB_WORKSPACE}/eksk8s/cluster-config.yaml
 
+      - name: Gets down the kub_config file
+        run: |
+          aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME}
+          cat ${HOME}/.kube/config
+
       - name: Saves the kubeconfig as ssm value
+        if: false
         run: |
           base64 -w 0 ${HOME}/.kube/config > ${GITHUB_WORKSPACE}/kube_encoded
           KUBE_CONFIG=$(cat ${GITHUB_WORKSPACE}/kube_encoded)
@@ -165,11 +196,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3.5.3
+
       - name: Setup AWS CLI
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
+
       - name: Executes the cloudformation template
-        run: aws cloudformation create-stack --stack-name cv-stack --template-body file://cloudfront-template.yml
+        run: sh ${GITHUB_WORKSPACE}/.github/scripts/ssm.sh

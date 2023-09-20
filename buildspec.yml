@@ -7,6 +7,14 @@ phases:
     runtime-versions:
       python: 3.7
     commands:
+      - echo 'starting docker'
+      - service docker start
+      - echo 'docker started'
+      - docker --version
+      - docker run helloworld
+      - echo 'about to call dockerd'
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
       - echo "Installing kubectl..."
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
@@ -22,6 +30,12 @@ phases:
       - echo $KUBE_CONFIG
       - echo '--------------'
       - echo "kube config already setup!"
+      - echo "Getting the kube config file"
+      - aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+      - aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+      - aws configure set default.region ${AWS_REGION}
+      - aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME}
+      - cat ${HOME}/.kube/config
       - kubectl get -n kube-system configmap/aws-auth -o yaml > aws-auth-patch.yml
       - sed "/mapRoles:/a \ \ \ \ - groups:\n\ \ \ \ \ \ \ \ - system:masters\n\ \ \ \ \ \ \ \ rolearn: ${CLUSTER_ROLE_NAME}\n\ \ \ \ \ \ \ \ username: build" aws-auth-patch.yml > new-aws-auth-patch.yml
       - mv new-aws-auth-patch.yml aws-auth-patch.yml

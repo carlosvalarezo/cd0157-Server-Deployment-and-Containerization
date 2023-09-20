@@ -4,23 +4,47 @@ Parameters:
 
   EksClusterName:
     Description: The name of the EKS cluster already created
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: CLUSTER_NAME
-    NoEcho: true
     ConstraintDescription: You must enter the EKS cluster name
+
+  EksClusterRoleArn:
+    Description: The name of the EKS cluster role already created
+    Type: String
+    Default: CLUSTER_ROLE_ARN
+    ConstraintDescription: You must enter the EKS cluster role arn
+
+  AwsAccessKeyId:
+    Description: The AwsAccessKeyId value
+    Type: String
+    NoEcho: true
+    Default: _AWS_ACCESS_KEY_ID
+    ConstraintDescription: You must enter the AWS Key ID
+
+  AwsSecretAccessKey:
+    Description: The AwsSecretAccessKey value
+    Type: String
+    NoEcho: true
+    Default: _AWS_SECRET_ACCESS_KEY
+    ConstraintDescription: You must enter the AWS Secret Access Key
+
+  AwsRegion:
+    Description: The AwsRegion value
+    Type: String
+    NoEcho: true
+    Default: _AWS_REGION
+    ConstraintDescription: You must enter the AWS Region
 
   ClusterRoleName:
     Description: The name of role to access to the EKS cluster
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: CLUSTER_ROLE_NAME
-    NoEcho: true
     ConstraintDescription: You must enter the EKS cluster role name
 
   GitSourceRepo:
     Description: GitHub source repository - must contain a Dockerfile and buildspec.yml in the base
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: SOURCE_REPOSITORY
-    NoEcho: true
     ConstraintDescription: You must enter a GitHub repository name
 
   GitBranch:
@@ -29,78 +53,105 @@ Parameters:
     NoEcho: true
     MinLength: 1
     MaxLength: 20
-    Default: develop  
+    Default: develop
     ConstraintDescription: You must enter a GitHub repository branch name
 
   GitHubToken:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: GITHUB_TOKEN
-    NoEcho: true
     Description: GitHub API token - see https://github.com/blog/1509-personal-api-tokens
+    Type: String
+    Default: GITHUB_TOKEN
     ConstraintDescription: You must enter a GitHub personal access token
 
   GitHubUser:
     Description: GitHub username or organization
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: GITHUB_USER
-    NoEcho: true
     ConstraintDescription: You must enter a GitHub username or organization
 
-  CodePipelineRoleName:
+  CodePipelineRoleArn:
     Description: Role to be used by codepipeline
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: CODEPIPELINE_ROLE_NAME
-    NoEcho: true
+    Type: String
+    Default: CODEPIPELINE_ROLE_ARN
     ConstraintDescription: You must enter a role name
 
-  CodeBuildRoleName:
+  CodeBuildRoleArn:
     Description: Role to be used by codebuild
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: CODEBUILD_ROLE_NAME
-    NoEcho: true
+    Type: String
+    Default: CODEBUILD_ROLE_ARN
     ConstraintDescription: You must enter a role name
 
   DockerUserName:
     Description: Username to access docker.io
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: DOCKER_USERNAME
-    NoEcho: true
     ConstraintDescription: You must enter a username
 
   DockerToken:
     Description: Token to access docker.io
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: DOCKER_TOKEN
-    NoEcho: true
     ConstraintDescription: You must enter a token
-
-  KubeConfig:
-    Description: Kube_config file to connect to the k8s cluster
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: KUBE_CONFIG
-    #NoEcho: true
-    ConstraintDescription: You must enter a kube_config file
 
   JWTToken:
     Description: Passphrase used to cypher/decypher the content of the JWT
-    Type: AWS::SSM::Parameter::Value<String>
+    Type: String
     Default: JWT_TOKEN
-    NoEcho: true
     ConstraintDescription: You must enter a JWT token value
+
+  ArtifactBucketName:
+    Description: Name for the artifact S3 bucket
+    Type: String
+    Default: cv-codepipeline-artifacts-bucket
 
   Environment:
     Description: Environments to deploy the app
     Type: String
-    Default: 'develop'
+    Default: develop
     AllowedValues:
-      - 'develop'
-      #- 'production'
+      - develop
+      #- production
 
 Resources:
-  EksCluster:
-    Type: AWS::EKS::Cluster
+  CodeBuild:
+    Type: 'AWS::CodeBuild::Project'
     Properties:
-      Name: !Ref EksClusterName
+      Name: cv-codebuild
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec.yml
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/standard:4.0
+        EnvironmentVariables:
+          - Name: DOCKER_USERNAME
+            Value: !Ref DockerUserName
+          - Name: DOCKER_TOKEN
+            Value: !Ref DockerToken
+          - Name: CLUSTER_NAME
+            Value: !Ref EksClusterName
+          - Name: CLUSTER_ROLE_NAME
+            Value: !Ref ClusterRoleName
+          - Name: ENVIRONMENT
+            Value: !Ref Environment
+          - Name: REPOSITORY_NAME
+            Value: !Ref GitSourceRepo
+          - Name: REPOSITORY_BRANCH
+            Value: !Ref GitBranch
+          - Name: REPOSITORY_URI
+            Value: docker.io
+          - Name: JWT_SECRET
+            Value: !Ref JWTToken
+          - Name: AWS_SECRET_ACCESS_KEY
+            Value: !Ref AwsSecretAccessKey
+          - Name: AWS_ACCESS_KEY_ID
+            Value: !Ref AwsAccessKeyId
+          - Name: AWS_REGION
+            Value: !Ref AwsRegion
+      ServiceRole: !Ref CodeBuildRoleArn
+      Artifacts:
+        Type: CODEPIPELINE
+        Name: MyBuildOutput
 
   CodePipeline:
     Type: 'AWS::CodePipeline::Pipeline'
@@ -121,40 +172,23 @@ Resources:
                 OAuthToken: !Ref GitHubToken
               OutputArtifacts:
                 - Name: SourceOutput
-      RoleArn: !Ref CodePipelineRoleName
-
-  CodeBuild:
-    Type: 'AWS::CodeBuild::Project'
-    Properties:
-      Name: cv-codebuild
-      Source:
-        Type: CODEPIPELINE
-        BuildSpec: buildspec.yml
-      Environment:
-        ComputeType: BUILD_GENERAL1_SMALL
-        Type: LINUX_CONTAINER
-        Image: aws/codebuild/standard:4.0
-        EnvironmentVariables:
-          - Name: DOCKER_USERNAME
-            Value: !Ref DockerUserName
-          - Name: DOCKER_TOKEN
-            Value: !Ref DockerToken
-          - Name: KUBE_CONFIG
-            Value: !Ref KubeConfig
-          - Name: CLUSTER_ROLE_NAME
-            Value: !Ref ClusterRoleName
-          - Name: ENVIRONMENT
-            Value: !Ref Environment
-          - Name: REPOSITORY_NAME
-            Value: !Ref GitSourceRepo
-          - Name: REPOSITORY_BRANCH
-            Value: !Ref GitBranch
-          - Name: REPOSITORY_URI
-            Value: docker.io
-          - Name: JWT_SECRET
-            Value: !Ref JWTToken
-
-      ServiceRole: !Ref CodeBuildRoleName
-      Artifacts:
-        Type: CODEPIPELINE
-        Name: MyBuildOutput
+        - Name: BuildStage
+          Actions:
+            - Name: BuildAction
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref CodeBuild
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+      ArtifactStores:
+        - Region: !Ref AwsRegion
+          ArtifactStore:
+            Type: S3
+            Location: cv-codepipeline-artifacts-bucket
+      RoleArn: !Ref CodePipelineRoleArn

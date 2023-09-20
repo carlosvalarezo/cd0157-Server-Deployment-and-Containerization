@@ -110,7 +110,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Creates the s3 bucket
-        run: aws s3api create-bucket --bucket ${BUCKET_NAME} --region ${AWS_REGION}
+        run: aws s3api create-bucket --bucket ${BUCKET_NAME}
 
   create_the_cluster:
     runs-on: ubuntu-latest

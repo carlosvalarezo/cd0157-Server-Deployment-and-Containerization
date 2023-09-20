@@ -112,37 +112,6 @@ Parameters:
       #- production
 
 Resources:
-  ArtifactBucket:
-    Type: 'AWS::S3::Bucket'
-    Properties:
-      BucketName: !Ref ArtifactBucketName
-
-  CodePipeline:
-    Type: 'AWS::CodePipeline::Pipeline'
-    Properties:
-      Stages:
-        - Name: cv-codepipeline
-          Actions:
-            - Name: SourceAction
-              ActionTypeId:
-                Category: Source
-                Owner: ThirdParty
-                Version: 1
-                Provider: GitHub
-              Configuration:
-                Owner: !Ref GitHubUser
-                Repo: !Ref GitSourceRepo
-                Branch: !Ref GitBranch
-                OAuthToken: !Ref GitHubToken
-              OutputArtifacts:
-                - Name: SourceOutput
-      ArtifactStores:
-        - Region: !Ref AwsRegion
-          ArtifactStore:
-            Type: S3
-            Location: cv-codepipeline-artifacts-bucket
-      RoleArn: !Ref CodePipelineRoleArn
-
   CodeBuild:
     Type: 'AWS::CodeBuild::Project'
     Properties:
@@ -183,3 +152,43 @@ Resources:
       Artifacts:
         Type: CODEPIPELINE
         Name: MyBuildOutput
+
+  CodePipeline:
+    Type: 'AWS::CodePipeline::Pipeline'
+    Properties:
+      Stages:
+        - Name: cv-codepipeline
+          Actions:
+            - Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref GitSourceRepo
+                Branch: !Ref GitBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: SourceOutput
+        - Name: BuildStage
+          Actions:
+            - Name: BuildAction
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref CodeBuild
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+      ArtifactStores:
+        - Region: !Ref AwsRegion
+          ArtifactStore:
+            Type: S3
+            Location: cv-codepipeline-artifacts-bucket
+      RoleArn: !Ref CodePipelineRoleArn

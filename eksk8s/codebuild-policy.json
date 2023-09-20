@@ -9,7 +9,10 @@
           "ssm:GetParameters",
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:PutLogEvents",
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket"
         ],
         "Resource": "*"
       }

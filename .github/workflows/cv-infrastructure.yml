@@ -90,7 +90,7 @@ jobs:
           aws ssm put-parameter --region ${AWS_REGION} --name "CODEBUILD_ROLE_ARN" --value ${CODEBUILD_ROLE_ARN} --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
       - name: Attaches the policy for the codebuild role
-        run: aws iam put-role-policy --role-name ${CODEBUILD_ROLE_NAME} --policy-name ${CODEBUILD_ROLE_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-policy.json
+        run: aws iam put-role-policy --role-name ${CODEBUILD_ROLE_NAME} --policy-name ${CODEBUILD_POLICY_NAME} --policy-document file://${GITHUB_WORKSPACE}/eksk8s/codebuild-policy.json
   
   creates_cloudpipeline_bucket:
     runs-on: ubuntu-latest

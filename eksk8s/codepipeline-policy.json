@@ -6,7 +6,10 @@
         "Action": [
           "codebuild:StartBuild",
           "codebuild:BatchGetBuilds",
-          "cloudformation:CreateStack"
+          "cloudformation:CreateStack",
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket"
         ],
         "Resource": "*"
       }

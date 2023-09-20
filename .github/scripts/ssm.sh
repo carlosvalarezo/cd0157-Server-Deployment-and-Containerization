@@ -8,6 +8,7 @@ _AWS_REGION=$(aws ssm get-parameter --with-decryption --name "_AWS_REGION" --que
 SOURCE_REPOSITORY=$(aws ssm get-parameter --with-decryption --name "SOURCE_REPOSITORY" --query "Parameter.Value" --output text)
 CLUSTER_ROLE_NAME=$(aws ssm get-parameter --with-decryption --name "CLUSTER_ROLE_NAME" --query "Parameter.Value" --output text)
 CODEBUILD_ROLE_ARN=$(aws ssm get-parameter --with-decryption --name "CODEBUILD_ROLE_ARN" --query "Parameter.Value" --output text)
+CODEPIPELINE_ROLE_ARN=$(aws ssm get-parameter --with-decryption --name "CODEPIPELINE_ROLE_ARN" --query "Parameter.Value" --output text)
 DOCKER_USERNAME=$(aws ssm get-parameter --with-decryption --name "DOCKER_USERNAME" --query "Parameter.Value" --output text)
 DOCKER_TOKEN=$(aws ssm get-parameter --with-decryption --name "DOCKER_TOKEN" --query "Parameter.Value" --output text)
 GITHUB_TOKEN=$(aws ssm get-parameter --with-decryption --name "GITHUB_TOKEN" --query "Parameter.Value" --output text)

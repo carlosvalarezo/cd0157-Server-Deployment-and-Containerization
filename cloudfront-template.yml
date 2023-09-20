@@ -116,6 +116,7 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: !Ref ArtifactBucketName
+
   CodePipeline:
     Type: 'AWS::CodePipeline::Pipeline'
     Properties:
@@ -139,7 +140,7 @@ Resources:
         - Region: !Ref AwsRegion
           ArtifactStore:
             Type: S3
-            Location: !Sub "${ArtifactBucket}-${AWS::Region}"
+            Location: !Sub "${AWS::Region}"
       RoleArn: !Ref CodePipelineRoleArn
 
   CodeBuild:

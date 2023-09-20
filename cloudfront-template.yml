@@ -140,7 +140,7 @@ Resources:
         - Region: !Ref AwsRegion
           ArtifactStore:
             Type: S3
-            Location: !Sub "${AWS::Region}"
+            Location: cv-codepipeline-artifacts-bucket
       RoleArn: !Ref CodePipelineRoleArn
 
   CodeBuild:

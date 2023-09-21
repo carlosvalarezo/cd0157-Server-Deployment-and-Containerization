@@ -15,9 +15,6 @@ phases:
       - sudo apt update -y
       - apt-cache policy docker-ce
       - sudo apt install docker-ce -y
-      - echo 'starting docker'
-      - service docker start
-      - echo 'docker started'
       - docker --version
       - docker run helloworld
       - echo 'about to call dockerd'

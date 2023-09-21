@@ -16,7 +16,7 @@ phases:
       - apt-cache policy docker-ce
       - sudo apt-get install docker.io -y
       - echo 'starting docker'
-      - sudo systemctl enable docker
+      - sudo service docker start
       - echo 'docker started'
       - docker --version
       - docker run helloworld

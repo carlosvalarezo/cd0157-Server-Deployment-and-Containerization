@@ -18,6 +18,7 @@ phases:
       - echo 'starting docker'
       - sudo usermod -aG docker root
       - sudo systemctl enable docker
+      - sudo chmod +x /etc/init.d/docker
       - sudo /etc/init.d/docker start
       - echo 'docker started'
       - docker --version

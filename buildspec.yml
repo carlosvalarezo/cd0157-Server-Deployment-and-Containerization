@@ -16,6 +16,7 @@ phases:
       - apt-cache policy docker-ce
       - sudo apt-get install docker-ce -y
       - echo ${USER}
+      - whoami
       - echo 'starting docker'
       - sudo usermod -aG docker ${USER}
       - sudo chown root:docker /var/run/docker.sock

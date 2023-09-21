@@ -10,6 +10,7 @@ phases:
       - docker --version
       - lsb_release -a
       - ps -p 1 -o comm=
+      - sudo apt-get install -y --reinstall linux-modules-5.4.0-42-generic
       - /usr/local/bin/dockerd
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
       - sudo timeout 15 sh -c "until docker info; do echo .; sleep 1; done"

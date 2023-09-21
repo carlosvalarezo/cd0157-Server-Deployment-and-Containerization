@@ -15,9 +15,7 @@ phases:
       - sudo apt update -y
       - apt-cache policy docker-ce
       - sudo apt install docker-ce -y
-      - sudo usermod -aG docker ${USER}
       - su - ${USER}
-      - sudo usermod -aG docker username
       - echo 'starting docker'
       - sudo systemctl start docker
       - echo 'docker started'

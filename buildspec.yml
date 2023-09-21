@@ -38,7 +38,7 @@ phases:
       - curl -fsSL https://get.docker.com -o get-docker.sh
       - sudo sh ./get-docker.sh --dry-run
       - docker --version
-      - sudo docker-machine start
+      - sudo service docker start
       - sudo docker run hello-world
       - echo 'about to call dockerd'
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&

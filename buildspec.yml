@@ -19,6 +19,9 @@ phases:
       - sudo usermod -aG docker root
       - sudo systemctl enable docker
       - sudo chmod +x /etc/init.d/docker
+      - hard nofile 65535
+      - soft nofile 65535
+      - sudo /etc/init.d/docker restart
       - sudo /etc/init.d/docker start
       - echo 'docker started'
       - docker --version

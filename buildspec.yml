@@ -17,9 +17,9 @@ phases:
       - apt-cache policy docker-ce
       - sudo apt-get install docker-ce -y
       - echo 'starting docker'
-      - sudo chkconfig docker on
       - sudo usermod -aG docker root
       - sudo chmod +x /etc/init.d/docker
+      - sudo systemctl enable docker
       - sudo systemctl start docker
       - echo 'docker started'
       - docker --version

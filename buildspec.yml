@@ -10,17 +10,18 @@ phases:
       - lsb_release -a
       - ps -p 1 -o comm=
       - sudo apt update -y
-      - sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
-      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-      - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-      - sudo apt update -y
-      - apt-cache policy docker-ce
-      - sudo apt-get install docker-ce -y
-      - echo 'starting docker'
-      - sudo usermod -aG docker root
-      - sudo chmod +x /etc/init.d/docker
-      - sudo systemctl enable docker && sudo systemctl start docker
-      - echo 'docker started'
+      # - sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+      # - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      # - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+      # - sudo apt update -y
+      # - apt-cache policy docker-ce
+      # - sudo apt-get install docker-ce -y
+      # - echo 'starting docker'
+      # - sudo usermod -aG docker root
+      # - sudo chmod +x /etc/init.d/docker
+      # - sudo systemctl enable docker && sudo systemctl start docker
+      # - echo 'docker started'
+      - sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       - docker --version
       - docker run hello-world
       - echo 'about to call dockerd'

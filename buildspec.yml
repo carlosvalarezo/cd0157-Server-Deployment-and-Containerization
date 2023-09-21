@@ -15,9 +15,9 @@ phases:
       - sudo apt update -y
       - apt-cache policy docker-ce
       - sudo apt-get install docker-ce -y
+      - echo ${USER}
       - echo 'starting docker'
-      - sudo usermod -aG docker $USER
-      - newgrp docker
+      - sudo usermod -aG docker ${USER}
       - sudo chown root:docker /var/run/docker.sock
       - sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
       - sudo chmod g+rwx "$HOME/.docker" -R

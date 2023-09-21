@@ -14,8 +14,9 @@ phases:
       - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
       - sudo apt update -y
       - apt-cache policy docker-ce
-      - sudo apt install docker-ce -y
+      - sudo apt-get install docker.io -y
       - echo 'starting docker'
+      - sudo usermod -aG docker $USER
       - sudo systemctl enable docker
       - echo 'docker started'
       - docker --version

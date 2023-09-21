@@ -15,11 +15,10 @@ phases:
       - sudo apt update -y
       - apt-cache policy docker-ce
       - sudo apt-get install docker-ce -y
-      - echo ${USER}
-      - whoami
       - echo 'starting docker'
       - sudo usermod -aG docker root
-      - dockerd
+      - sudo systemctl enable docker
+      - sudo dockerd
       - echo 'docker started'
       - docker --version
       - docker run hello-world

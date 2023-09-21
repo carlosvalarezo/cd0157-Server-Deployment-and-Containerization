@@ -28,7 +28,7 @@ phases:
       - aws configure set default.region ${AWS_REGION}
       - aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME}
       - cat ${HOME}/.kube/config
-      - kubectl get -n kube-system configmap/aws-auth -o yaml > aws-auth-patch.yml
+      - kubectl get -n kube-system configmap/aws-auth -o yaml > new-aws-auth-patch.yml
       - mv new-aws-auth-patch.yml aws-auth-patch.yml
       - kubectl patch configmap/aws-auth -n kube-system --patch "$(cat aws-auth-patch.yml)"
       - python -m pip install --upgrade --force pip

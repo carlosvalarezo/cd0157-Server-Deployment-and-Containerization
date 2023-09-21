@@ -19,8 +19,7 @@ phases:
       - echo 'starting docker'
       - sudo usermod -aG docker root
       - sudo chmod +x /etc/init.d/docker
-      - sudo systemctl enable docker
-      - sudo /lib/systemd/systemd-sysv-install start docker
+      - sudo systemctl enable docker && sudo systemctl start docker
       - echo 'docker started'
       - docker --version
       - docker run hello-world

@@ -10,9 +10,9 @@ phases:
       - lsb_release -a
       - ps -p 1 -o comm=
       - sudo apt update -y
+      - curl -fsSL https://get.docker.com -o get-docker.sh
       - sudo sh ./get-docker.sh --dry-run
       - docker --version
-      - sudo systemctl daemon-reload
       - sudo docker run hello-world
       - echo "Installing kubectl..."
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"

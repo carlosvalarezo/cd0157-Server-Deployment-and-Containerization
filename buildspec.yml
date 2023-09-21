@@ -17,7 +17,6 @@ phases:
       - sudo apt-get install docker-ce -y
       - echo 'starting docker'
       - sudo usermod -aG docker root
-      - sudo systemctl status docker
       - sudo chmod +x /etc/init.d/docker
       - sudo /etc/init.d/docker restart
       - echo 'docker started'

@@ -19,8 +19,6 @@ phases:
       - whoami
       - echo 'starting docker'
       - sudo usermod -aG docker root
-      - sudo chown root:docker /home/root/.docker -R
-      - sudo chmod g+rwx "$HOME/.docker" -R
       - sudo dockerd
       - echo 'docker started'
       - docker --version

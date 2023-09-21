@@ -16,6 +16,7 @@ phases:
       - apt-cache policy docker-ce
       - sudo apt-get install docker-ce -y
       - echo 'starting docker'
+      - sudo chmod 660 /var/run/docker.sock
       - sudo dockerd
       - echo 'docker started'
       - docker --version

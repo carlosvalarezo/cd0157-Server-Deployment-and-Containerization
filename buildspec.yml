@@ -40,7 +40,7 @@ phases:
   build:
     commands:
       - docker build --tag ${DOCKER_USERNAME}:${TAG} .
-      - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_TOKEN} docier.io
+      - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_TOKEN} docker.io
       - docker push ${DOCKER_USERNAME}:${TAG}
       - docker run -e JWT_SECRET=my-super-secret -e LOG_LEVEL=DEBUG -p 8080:8080 --entrypoint 'pytest' ${DOCKER_USERNAME}:$TAG
 

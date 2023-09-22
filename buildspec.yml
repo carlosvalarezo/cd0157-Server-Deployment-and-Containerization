@@ -5,14 +5,8 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.7
+      python: 3.9
     commands:
-      - echo 'starting docker'
-      - service docker start
-      - echo 'docker started'
-      - docker --version
-      - docker run helloworld
-      - echo 'about to call dockerd'
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
       - echo "Installing kubectl..."
@@ -36,8 +30,7 @@ phases:
       - aws configure set default.region ${AWS_REGION}
       - aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME}
       - cat ${HOME}/.kube/config
-      - kubectl get -n kube-system configmap/aws-auth -o yaml > aws-auth-patch.yml
-      - sed "/mapRoles:/a \ \ \ \ - groups:\n\ \ \ \ \ \ \ \ - system:masters\n\ \ \ \ \ \ \ \ rolearn: ${CLUSTER_ROLE_NAME}\n\ \ \ \ \ \ \ \ username: build" aws-auth-patch.yml > new-aws-auth-patch.yml
+      - kubectl get -n kube-system configmap/aws-auth -o yaml > new-aws-auth-patch.yml
       - mv new-aws-auth-patch.yml aws-auth-patch.yml
       - kubectl patch configmap/aws-auth -n kube-system --patch "$(cat aws-auth-patch.yml)"
       - python -m pip install --upgrade --force pip
@@ -61,5 +54,5 @@ artifacts:
   files: build.json
 env:
   parameter-store:         
-    JWT_SECRET: ${JWT_TOKEN}
-    LOG_LEVEL: DEBUG
+    JWT_SECRET: JWT_TOKEN
+    LOG_LEVEL: LOG_LEVEL

@@ -36,12 +36,12 @@ phases:
   pre_build:
       commands:
         - TAG="$REPOSITORY_NAME.$REPOSITORY_BRANCH.$ENVIRONMENT_NAME.$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
-        - sed -i 's@CONTAINER_IMAGE@'"${DOCKER_USERNAME}:$TAG"'@' simple_jwt_api.yml
+        - sed -i 's@CONTAINER_IMAGE@'"${DOCKER_USERNAME}/$TAG"'@' simple_jwt_api.yml
   build:
     commands:
-      - docker build --tag ${DOCKER_USERNAME}:$TAG .
+      - docker build --tag ${DOCKER_USERNAME}/$TAG .
       - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_TOKEN}
-      - docker push ${DOCKER_USERNAME}:$TAG
+      - docker push ${DOCKER_USERNAME}/$TAG
       - docker run -e JWT_SECRET=my-super-secret -e LOG_LEVEL=DEBUG -p 8080:8080 --entrypoint 'pytest' ${DOCKER_USERNAME}:$TAG
 
   post_build:

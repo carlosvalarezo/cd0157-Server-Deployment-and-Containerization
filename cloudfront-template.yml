@@ -123,6 +123,7 @@ Resources:
         ComputeType: BUILD_GENERAL1_SMALL
         Type: LINUX_CONTAINER
         Image: aws/codebuild/standard:4.0
+        PrivilegedMode: true
         EnvironmentVariables:
           - Name: DOCKER_USERNAME
             Value: !Ref DockerUserName

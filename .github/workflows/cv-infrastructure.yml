@@ -93,7 +93,7 @@ jobs:
 
       - name: Inserts env vars
         run: |
-          aws ssm put-parameter --region ${AWS_REGION} --name "LOG_LEVEL" --value ${CODEBUILD_ROLE_ARN} --type "SecureString" --key-id "${KEY_ID}" --overwrite
+          aws ssm put-parameter --region ${AWS_REGION} --name "LOG_LEVEL" --value "DEBUG" --type "SecureString" --key-id "${KEY_ID}" --overwrite
 
   creates_cloudpipeline_bucket:
     runs-on: ubuntu-latest

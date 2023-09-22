@@ -7,11 +7,6 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
-      - echo 'starting docker'
-      - service docker start
-      - echo 'docker started'
-      - docker --version
-      - docker run helloworld
       - echo 'about to call dockerd'
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
@@ -44,18 +39,18 @@ phases:
   pre_build:
       commands:
         - TAG="$REPOSITORY_NAME.$REPOSITORY_BRANCH.$ENVIRONMENT_NAME$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
-        - sed -i 's@CONTAINER_IMAGE@'"${DOCKER_USERNAME}:${TAG}"'@' simple_jwt_api.yml
+        - sed -i 's@CONTAINER_IMAGE@'"${DOCKER_USERNAME}/simple-flask:${TAG}"'@' simple_jwt_api.yml
   build:
     commands:
-      - docker build --tag ${DOCKER_USERNAME}:${TAG} .
+      - docker build --tag ${DOCKER_USERNAME}/simple-flask:${TAG} .
       - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_TOKEN} docker.io
-      - docker push ${DOCKER_USERNAME}:${TAG}
-      - docker run -e JWT_SECRET=my-super-secret -e LOG_LEVEL=DEBUG -p 8080:8080 --entrypoint 'pytest' ${DOCKER_USERNAME}:$TAG
+      - docker push ${DOCKER_USERNAME}/simple-flask:${TAG}
+      - docker run -e JWT_SECRET=my-super-secret -e LOG_LEVEL=DEBUG -p 8080:8080 --entrypoint 'pytest' ${DOCKER_USERNAME}/simple-flask:$TAG
 
   post_build:
     commands:
       - kubectl apply -f simple_jwt_api.yml 
-      - printf '[{"name":"simple_jwt_api","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
+      - printf '[{"name":"simple_jwt_api","imageUri":"%s"}]' ${DOCKER_USERNAME}/simple-flask:$TAG > build.json
 artifacts:
   files: build.json
 env:

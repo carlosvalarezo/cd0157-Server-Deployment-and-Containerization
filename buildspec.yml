@@ -35,12 +35,12 @@ phases:
       - apt-get update && apt-get -y install jq  && pip install --upgrade awscli
   pre_build:
       commands:
-        - TAG="$REPOSITORY_NAME.$REPOSITORY_BRANCH.$ENVIRONMENT_NAME.$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+        - TAG="$REPOSITORY_NAME.$REPOSITORY_BRANCH.$ENVIRONMENT_NAME$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
         - sed -i 's@CONTAINER_IMAGE@'"${DOCKER_USERNAME}:${TAG}"'@' simple_jwt_api.yml
   build:
     commands:
-      - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_TOKEN}
       - docker build --tag ${DOCKER_USERNAME}:${TAG} .
+      - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_TOKEN} docier.io
       - docker push ${DOCKER_USERNAME}:${TAG}
       - docker run -e JWT_SECRET=my-super-secret -e LOG_LEVEL=DEBUG -p 8080:8080 --entrypoint 'pytest' ${DOCKER_USERNAME}:$TAG
 

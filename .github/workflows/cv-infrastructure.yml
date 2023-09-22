@@ -93,8 +93,7 @@ jobs:
 
       - name: Inserts env vars
         run: |
-          export KEY_ID=$(cat ${GITHUB_WORKSPACE}/arn)
-          aws ssm put-parameter --region ${AWS_REGION} --name "LOG_LEVEL" --value "DEBUG" --type "String" --key-id "${KEY_ID}" --overwrite
+          aws ssm put-parameter --region ${AWS_REGION} --name "LOG_LEVEL" --value "DEBUG" --type "String" --overwrite
 
   creates_cloudpipeline_bucket:
     runs-on: ubuntu-latest
